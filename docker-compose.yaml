@@ -1,0 +1,53 @@
+
+version: '3.8'
+services:
+  development:
+    container_name: na-collabo-dev
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    environment:
+      - MONGO_NAME=na_collabo_dev
+      - MONGO_USER=root
+      - MONGO_PASSWORD=passwordRoot
+      - MONGO_HOST=mongodb:27017
+      - JWT_ALGORITHM=HS512
+      - JWT_SECRET=secretuponsecretWT
+    ports:
+      - '3021:3021'
+      - '4200:4200'
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/srv
+      - /srv/node_modules
+    restart: unless-stopped
+    networks:
+      - na-collabo-network
+
+  # start the mongodb service as container
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - na-collabo-network
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=admin
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=passwordRoot
+
+networks:
+  na-collabo-network:
+
+volumes:
+  mongo_data:
