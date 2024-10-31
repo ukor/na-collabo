@@ -1,51 +1,41 @@
 import styled from 'styled-components';
 
-import NxWelcome from './nx-welcome';
 
 import { Route, Routes, Link } from 'react-router-dom';
+import { Articles } from './articles';
+import { CreateArticle } from './create';
 
 const StyledApp = styled.div`
   // Your style here
 `;
 
+const username = `user-${Math.floor(Math.random() * 100) + 1}`;
+
 export function App() {
   return (
     <StyledApp>
-      <NxWelcome title="react_app" />
 
-      {/* START: routes */}
-      {/* These routes and navigation have been generated for you */}
-      {/* Feel free to move and update them to fit your needs */}
       <br />
       <hr />
       <br />
       <div role="navigation">
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/">Article List</Link>
           </li>
           <li>
-            <Link to="/page-2">Page 2</Link>
+            <Link to="/create">Create New</Link>
           </li>
         </ul>
       </div>
       <Routes>
         <Route
           path="/"
-          element={
-            <div>
-              This is the generated root route.{' '}
-              <Link to="/page-2">Click here for page 2.</Link>
-            </div>
-          }
+          element={<Articles username={username} />}
         />
         <Route
-          path="/page-2"
-          element={
-            <div>
-              <Link to="/">Click here to go back to root page.</Link>
-            </div>
-          }
+          path="/create"
+          element={<CreateArticle username={username} />}
         />
       </Routes>
       {/* END: routes */}
